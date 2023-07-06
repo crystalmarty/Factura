@@ -12,6 +12,7 @@ using System.Windows.Forms;
 namespace Factura
 {
     public partial class Form1 : Form
+
     {
         public Form1()
         {
@@ -44,45 +45,36 @@ namespace Factura
             string nom;
             float precio;
 
-            cod= cmbProducto.SelectedIndex;
+            cod = cmbProducto.SelectedIndex;
             nom = cmbProducto.SelectedItem.ToString();
             precio = cmbProducto.SelectedIndex;
 
             switch (cod)
             {
-                case 0: lblCódigo.Text = "0011";break;
-                case 1: lblCódigo.Text = "0022";break;
-                default: lblCódigo.Text = "0033";break;
+                case 0: lblCódigo.Text = "0011"; break;
+                case 1: lblCódigo.Text = "0022"; break;
+                default: lblCódigo.Text = "0033"; break;
             }
             switch (nom)
             {
-                case "Tostada": lblNombre.Text = "Tostada";break;
-                case "Sabrita": lblNombre.Text = "Sabrita";break;
-                default: lblNombre.Text = "Jugo"
+                case "Tostada":
+                    lblNombre.Text = "Tostada";
+                    break;
+                case "Sabrita":
+                    lblNombre.Text = "Sabrita";
+                    break;
+                default:
+                    lblNombre.Text = "Jugo";
+                    break;
             }
 
             switch (precio)
             {
-                case 0: lblPrecio.Text = "150";break;
-                case 1: lblPrecio.Text = "120";break;
-                default: lblPrecio.Text = "140";break;
+                case 0: lblPrecio.Text = "150"; break;
+                case 1: lblPrecio.Text = "120"; break;
+                default: lblPrecio.Text = "140"; break;
             }
 
-        }
-        private void btnAgregar_Click(object sender, EventArgs e)
-        {
-            DataGridViewRow file = new DataGridViewRow();
-            file.CreateCells(dgvLista);
-
-            file.Cells[0].Value = lblCódigo.Text;
-            file.Cells[1].Value = lblNombre.Text;
-            file.Cells[2].Value = lblPrecio.Text;
-            file.Cells[3].Value = txtCantidad.Text;
-            file.Cells[4].Value = (float.Parse(lblPrecio.Text) = float.Parse(txtCantidad.Text)).ToString();
-
-            dgvLista.Rows.Add(file);
-
-            lblCódigo.Text = lblNombre.Text = lblPrecio.Text = txtCantidad.Text = "";
         }
         public void obtenerTotal()
         {
@@ -91,7 +83,7 @@ namespace Factura
 
             contador = dgvLista.RowCount;
 
-            for (int i = 0; i <contador, i++)
+            for (int i = 0; i < contador; i++)
             {
                 costot += float.Parse(dgvLista.Rows[i].Cells[4].Value.ToString());
             }
@@ -99,13 +91,44 @@ namespace Factura
             lblTotalapagar.Text = costot.ToString();
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void txtEfectivo_TextChanged(object sender, EventArgs e)
         {
-            try{
+            float efectivo = (float.Parse(txtEfectivo.Text));
+            float totalAPagar = float.Parse(lblTotalapagar.Text);
+            try
+            {
+                lblDevolución.Text = totalAPagar.ToString();
+            }
+            catch { }
+        }
+
+        private void btnAgregar_Click_1(object sender, EventArgs e)
+        {
+            DataGridViewRow file = new DataGridViewRow();
+            file.CreateCells(dgvLista);
+            float precio = (float.Parse(lblPrecio.Text));
+            precio = precio * float.Parse(txtCantidad.Text);
+
+            file.Cells[0].Value = lblCódigo.Text;
+            file.Cells[1].Value = lblNombre.Text;
+            file.Cells[2].Value = lblPrecio.Text;
+            file.Cells[3].Value = txtCantidad.Text;
+            file.Cells[4].Value = precio;
+
+            dgvLista.Rows.Add(file);
+
+            lblCódigo.Text = lblNombre.Text = lblPrecio.Text = txtCantidad.Text = "";
+            obtenerTotal();
+        }
+
+        private void btnEliminar_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
                 DialogResult rppta = MessageBox.Show("¿Desea eliminar producto?",
                     "Eliminacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (rppta = DialogResult.Yes)
+                if (rppta == DialogResult.Yes)
                 {
                     dgvLista.Rows.Remove(dgvLista.CurrentRow);
                 }
@@ -113,15 +136,6 @@ namespace Factura
             catch { }
             obtenerTotal();
         }
-
-        private void txtEfectivo_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                lblDevolución.Text = (float.Parse(txtEfectivo.Text) = float.Parse(lblTotalapagar.Text)).ToString();
-            }
-            catch { }
-        }
-
     }
 }
+
